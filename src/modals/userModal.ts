@@ -26,20 +26,6 @@ let UserSchema=new mongoose.Schema({
    }
 
 })
-
-// UserSchema.method.genrateToken( async function (next:NextFunction){
-//     try{
-//         if(this.isModified('token')){
-//             this.token=await jwt.sign(this,process.env.KEY)
-//             this.save()
-//             return this.token
-//         }
-
-//     }
-//     catch(err){
-
-//     }
-// // })
 UserSchema.methods.genrateToken=async function(next:NextFunction){
     try{
         let {_id}=this
