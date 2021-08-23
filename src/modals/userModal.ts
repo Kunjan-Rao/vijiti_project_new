@@ -1,6 +1,5 @@
 import { NextFunction } from 'express'
 import  *  as mongoose from 'mongoose'
-// import jwt from 'jsonwebtoken'
 const jwt=require('jsonwebtoken')
 
 let UserSchema=new mongoose.Schema({
