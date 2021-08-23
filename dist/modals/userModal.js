@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
-// import jwt from 'jsonwebtoken'
 const jwt = require('jsonwebtoken');
 let UserSchema = new mongoose.Schema({
     name: {
@@ -34,17 +33,6 @@ let UserSchema = new mongoose.Schema({
         default: null
     }
 });
-// UserSchema.method.genrateToken( async function (next:NextFunction){
-//     try{
-//         if(this.isModified('token')){
-//             this.token=await jwt.sign(this,process.env.KEY)
-//             this.save()
-//             return this.token
-//         }
-//     }
-//     catch(err){
-//     }
-// // })
 UserSchema.methods.genrateToken = function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
