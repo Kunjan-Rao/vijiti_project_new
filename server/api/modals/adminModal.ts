@@ -1,7 +1,9 @@
 import * as mongoose from 'mongoose'
 import {NextFunction} from 'express'
 import * as jwt from 'jsonwebtoken'
-let adminSchema=new mongoose.Schema({
+import admin from '../interface/admin'
+
+let adminSchema=new mongoose.Schema<admin>({
     username:{
         type:String,
         required:true
@@ -9,6 +11,11 @@ let adminSchema=new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    role:{
+        type:Number,
+        enum:[0,1],
+        requirec:true
     },
     issuDate:{
         type:Date,

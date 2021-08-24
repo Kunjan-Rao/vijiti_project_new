@@ -1,6 +1,6 @@
 import * as  mongoose from "mongoose";
-// import productInterface from "../interface/product";
-const productSchema=new mongoose.Schema({
+import product from '../interface/product'
+const productSchema=new mongoose.Schema<product>({
     item:{
         type:String,
         required:true

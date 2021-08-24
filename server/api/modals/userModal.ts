@@ -1,8 +1,10 @@
 import { NextFunction } from 'express'
 import  *  as mongoose from 'mongoose'
+import user from '../interface/user'
 const jwt=require('jsonwebtoken')
 
-let UserSchema=new mongoose.Schema({
+
+let UserSchema=new mongoose.Schema<user>({
     name:{
         type:String,
         required:true
@@ -19,10 +21,6 @@ let UserSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-   token:{
-       type:String,
-       default:null
-   }
 
 })
 UserSchema.methods.genrateToken=async function(next:NextFunction){
@@ -31,11 +29,11 @@ UserSchema.methods.genrateToken=async function(next:NextFunction){
         let token:string=await jwt.sign(`${new Date().getDate}_${_id}`,process.env.JWT_KEY)
         let data=this
         if(this.isModified('email')){
-        data['token']=token
-        await data.save()        
+          data['token']=token
+          await data.save()        
         }
     
-        return token
+    return token
 
     }catch(err){
     console.log(`somethig went to wrong ${err}`)

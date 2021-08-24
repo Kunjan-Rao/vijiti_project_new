@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-
-mongoose.connect('mongodb://localhost:27017/ProductDb',{
+const url=process.env.URL
+mongoose.connect(url,{
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology: true,
