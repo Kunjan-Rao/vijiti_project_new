@@ -16,7 +16,7 @@ const verifyToken=async(isToken:any)=>{
     try{
 
       let decode=await jwt_decode(isToken)
-      console.log(decode)
+     
        return decode
     }catch(err){
        return err

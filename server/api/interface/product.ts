@@ -4,5 +4,6 @@ export default interface product{
     item:string,
     category:string,
     price:number,
+    userId:any
     issuDate:Date
 }

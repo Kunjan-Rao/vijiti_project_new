@@ -9,21 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.user_register = void 0;
-const password_1 = require("../common/password");
-const tokens_1 = require("../common/tokens");
-const userModal_1 = require("../modals/userModal");
-const user_register = ({ name, email, mobileno, password }) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        //faching data from user controller 
-        password = yield password_1.setPassword(password);
-        const user = yield new userModal_1.default({ name, email, mobileno, password });
-        yield tokens_1.genrateToken(user._id); //genrate token
-        yield user.save(); //save data into the collection
-        return { status: 1 };
+exports.reqister = void 0;
+const admin_service = require("../service/admin");
+//export regiseter controller 
+const reqister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //passing data in user service
+    const regisetr = yield admin_service.user_register(req.body);
+    if (regisetr.status) {
+        res.status(200).send({ ok: 'User Register Successfully' });
     }
-    catch (err) {
-        return { status: 0, err };
+    else {
+        res.status(400).send({ error: `error-type:${regisetr.err}` });
     }
 });
-exports.user_register = user_register;
+exports.reqister = reqister;

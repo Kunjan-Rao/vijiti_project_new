@@ -17,6 +17,10 @@ const productSchema=new mongoose.Schema<product>({
     issuDate:{
      type:Date,
      default:new Date().getDate(),
+    },
+    userId:{
+        type: mongoose.Types.ObjectId,
+        ref: 'Users'
     }
 })
 

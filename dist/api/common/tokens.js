@@ -26,7 +26,6 @@ exports.genrateToken = genrateToken;
 const verifyToken = (isToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let decode = yield jwt_decode(isToken);
-        console.log(decode);
         return decode;
     }
     catch (err) {

@@ -23,23 +23,7 @@ let UserSchema=new mongoose.Schema<user>({
     },
 
 })
-UserSchema.methods.genrateToken=async function(next:NextFunction){
-    try{
-        let {_id}=this
-        let token:string=await jwt.sign(`${new Date().getDate}_${_id}`,process.env.JWT_KEY)
-        let data=this
-        if(this.isModified('email')){
-          data['token']=token
-          await data.save()        
-        }
-    
-    return token
 
-    }catch(err){
-    console.log(`somethig went to wrong ${err}`)
-    }
-
-}
 
 let usermodal=mongoose.model('User',UserSchema)
 export default usermodal

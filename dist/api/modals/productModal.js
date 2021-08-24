@@ -17,6 +17,10 @@ const productSchema = new mongoose.Schema({
     issuDate: {
         type: Date,
         default: new Date().getDate(),
+    },
+    userId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Users'
     }
 });
 const productModal = mongoose.model('Product', productSchema);
