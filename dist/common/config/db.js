@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 const url = process.env.URL;
 mongoose.connect(url, {
     useNewUrlParser: true,

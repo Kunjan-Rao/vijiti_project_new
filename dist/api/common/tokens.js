@@ -11,9 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.genrateToken = void 0;
 const jwt = require('jsonwebtoken');
+const jwt_decode = require('jwt-decode');
 const genrateToken = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let token = yield jwt.sign(id, process.env.JWT_KEY);
+        let token = yield jwt.sign({ id }, process.env.JWT_KEY);
         return token;
     }
     catch (err) {
@@ -24,8 +25,9 @@ exports.genrateToken = genrateToken;
 //this is for verify token is valid or not
 const verifyToken = (isToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let token = yield jwt.verify(isToken, process.env.JWT_KEY);
-        return token;
+        let decode = yield jwt_decode(isToken);
+        console.log(decode);
+        return decode;
     }
     catch (err) {
         return err;

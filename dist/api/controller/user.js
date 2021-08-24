@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reqister = void 0;
-const user_service = require("../service/user");
+exports.login = exports.reqister = void 0;
+const user_service = require("../service/user"); //user modal
+//export regiseter controller 
 const reqister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
+    //passing data in user service
     const regisetr = yield user_service.user_register(req.body);
     if (regisetr.status) {
         res.status(200).send({ ok: 'User Register Successfully' });
@@ -22,3 +23,15 @@ const reqister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.reqister = reqister;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //passing login data into user service
+    const login = yield user_service.user_login(req.body);
+    if (login.status) {
+        let token = login.token;
+        res.status(200).send({ ok: 'Login Successfully', token });
+    }
+    else {
+        res.status(400).send({ error: `Login error :${login.err}` });
+    }
+});
+exports.login = login;

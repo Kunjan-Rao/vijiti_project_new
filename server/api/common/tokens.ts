@@ -1,7 +1,9 @@
 const jwt=require('jsonwebtoken')
+const jwt_decode=require('jwt-decode')
 const genrateToken=async(id:object)=>{
     try{
-      let token=await jwt.sign(id,process.env.JWT_KEY)
+      
+      let token=await jwt.sign({id},process.env.JWT_KEY)
       return token
 
     }catch(err){   
@@ -12,8 +14,10 @@ const genrateToken=async(id:object)=>{
 //this is for verify token is valid or not
 const verifyToken=async(isToken:any)=>{
     try{
-      let token=await jwt.verify(isToken,process.env.JWT_KEY)
-      return token
+
+      let decode=await jwt_decode(isToken)
+      console.log(decode)
+       return decode
     }catch(err){
        return err
 

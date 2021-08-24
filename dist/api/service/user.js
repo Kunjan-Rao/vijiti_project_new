@@ -9,12 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.user_register = void 0;
+exports.user_login = exports.user_register = void 0;
+const password_1 = require("../common/password");
+const tokens_1 = require("../common/tokens");
 const userModal_1 = require("../modals/userModal");
 const user_register = ({ name, email, mobileno, password }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        //faching data from user controller 
+        password = yield password_1.setPassword(password);
         const user = yield new userModal_1.default({ name, email, mobileno, password });
-        yield user.save();
+        yield tokens_1.genrateToken(user._id); //genrate token
+        yield user.save(); //save data into the collection
         return { status: 1 };
     }
     catch (err) {
@@ -22,3 +27,19 @@ const user_register = ({ name, email, mobileno, password }) => __awaiter(void 0,
     }
 });
 exports.user_register = user_register;
+const user_login = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let user = yield userModal_1.default.findOne({ email });
+        if (user) {
+            const isValid = yield password_1.verifyPassword(password, user.password);
+            if (isValid) {
+                let token = yield tokens_1.genrateToken(user._id);
+                return { status: 1, token };
+            }
+        }
+    }
+    catch (err) {
+        return { status: 0, err };
+    }
+});
+exports.user_login = user_login;
