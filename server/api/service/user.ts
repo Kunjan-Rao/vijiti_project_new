@@ -89,7 +89,7 @@ const update_user_product=async(_id:object,userId:object,record:object)=>{
         $set:{record}
     })
 
-    console.log(isUpdated)
+
       return isUpdated
 }
 export {user_login,
