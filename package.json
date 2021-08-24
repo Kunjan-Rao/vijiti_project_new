@@ -2,9 +2,9 @@
   "name": "type-script-project",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/app.js",
+  "main": "./dist/common/app.js",
   "scripts": {
-    "start": "tsc && nodemon ./dist/app.js -e js,ts",
+    "start": "tsc && nodemon ./dist/common/app.js -e js,ts",
     "dev": "tsc && node ./dist/app.js -e js,ts",
     "test": "ts-node ./lib./app.js"
   },

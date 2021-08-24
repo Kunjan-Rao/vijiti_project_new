@@ -1,9 +1,12 @@
 //common modules
-import {router,Request,Response} from '../common/common-routing-methods'
+import { Request,Response} from 'express'
+import *  as express from 'express'
+import { reqister } from '../controller/user'
+const router=express.Router()
 //user routing
-router.get('/user',(req:Request,res:Response)=>{
+router.get('/',(req:Request,res:Response)=>{
     res.send('hello from user side')
     
 })
-router.post('/register',require('../controller/user'))
+router.post('/register',reqister)
 export default router

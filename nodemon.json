@@ -1,4 +1,4 @@
 {
-    "watch": ["dist/app.js", "src/"],
+    "watch": ["dist/common/app.js", "server/"],
     "ext": "js, css"
   }
