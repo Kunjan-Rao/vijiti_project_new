@@ -86,13 +86,7 @@ const delete_user_product = (_id, userId) => __awaiter(void 0, void 0, void 0, f
 });
 exports.delete_user_product = delete_user_product;
 const update_user_product = (_id, userId, record) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('prod id', _id);
-    console.log('user id', userId);
-    let isUpdated = yield productModal_1.default.updateOne({
-        $and: [{ userId, _id }],
-        $set: { record }
-    });
-    console.log(isUpdated);
+    let isUpdated = yield productModal_1.default.updateOne({ userId, _id }, record);
     return isUpdated;
 });
 exports.update_user_product = update_user_product;

@@ -81,13 +81,8 @@ const delete_user_product=async(_id:object,userId:object)=>{
 }
 
 const update_user_product=async(_id:object,userId:object,record:object)=>{
-           console.log('prod id',_id)
-           console.log('user id',userId)
-           
-    let isUpdated=await productModal.updateOne({
-        $and:[{userId,_id}],
-        $set:{record}
-    })
+
+    let isUpdated=await productModal.updateOne({userId,_id},record)
 
 
       return isUpdated
