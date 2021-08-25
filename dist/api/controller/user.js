@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
+exports.add_comment_product_controller = exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_single_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
 const user_service = require("../service/user"); //user modal
 const global_1 = require("../common/global");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //passing login data into user service
     const login = yield user_service.user_login(req.body);
-    if (login.status) {
+    if (login.status == 1) {
         let token = login.token;
         res.status(200).send({ ok: 'Login Successfully', token });
     }
@@ -54,11 +54,25 @@ const show_user_product_controller = (req, res) => __awaiter(void 0, void 0, voi
     }
 });
 exports.show_user_product_controller = show_user_product_controller;
+const show_single_product_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let _id = req.params.id;
+    let response = yield user_service.show_single_product(_id);
+    let product = response.product;
+    console.log(response);
+    if (response.status == 1) {
+        res.status(200).send(product);
+    }
+    else {
+        res.status(400).send({ error: `no data found` });
+    }
+});
+exports.show_single_product_controller = show_single_product_controller;
 const show_all_product_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //passing login data into user service
     try {
         let user = global_1.global.user;
         let id = user._id;
+        console.log(id);
         let response = yield user_service.show_all_product(id);
         if (response.status == 1) {
             res.status(200).send(response.product);
@@ -104,7 +118,26 @@ const update_user_product_controller = (req, res) => __awaiter(void 0, void 0, v
             res.status(400).send({ error: 'Record Not Updated' });
         }
     }
-    catch (_b) {
+    catch (err) {
     }
 });
 exports.update_user_product_controller = update_user_product_controller;
+const add_comment_product_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let comment = req.body.comment;
+        let user = global_1.global.user;
+        let userId = user._id;
+        let productId = req.params.id;
+        let response = yield user_service.add_comment(userId, productId, comment);
+        if (response.status) {
+            res.status(200).send({ ok: 'Comment Added' });
+        }
+        else {
+            res.status(400).send({ error: "Comment not added" });
+        }
+    }
+    catch (err) {
+        res.status(400).send({ error: err });
+    }
+});
+exports.add_comment_product_controller = add_comment_product_controller;

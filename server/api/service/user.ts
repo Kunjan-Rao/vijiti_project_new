@@ -4,7 +4,8 @@ import usermodal from "../modals/userModal"
 import productModal from "../modals/productModal"
 import product from "../interface/product";
 import { global } from "../common/global";
-
+import commentModal from "../modals/commentModal";
+import * as mongoose from "mongoose";
 
 const user_login=async({email,password})=>{
     try{ 
@@ -49,20 +50,35 @@ const show_user_product=async(_id:object)=>{
     }
 
 }
+const show_single_product=async(id)=>{
+    try{
+    //   let product=await productModal.find({_id})
+    let _id=mongoose.Types.ObjectId(id);
+    let product=await productModal.aggregate([
+        { 
+            $match: {_id:_id}             
+
+        },
+        { 
+            $lookup: { 
+                from: "comments", 
+                localField: "_id", 
+                foreignField: "ProductId", 
+                as: "comment" 
+            } 
+
+        },
+    ])
+      return {status:1,product}
+    }catch(err){ 
+       return {status:0,err}
+
+    }
+}
 
 const show_all_product=async(_id:object)=>{
     try{
-    
-    //  let product=await productModal.aggregate([{
-    //      $match:{userId:_id},
-    //      $lookup:
-    //      {
-    //        from:'Users',
-    //        localField:"userId",
-    //        foreignField:"_id",
-    //        as:"userProduct"
-    //      }
-    //  }])
+  
    let product=await productModal.aggregate([
         {
             $match:{$not:{userId:_id}},
@@ -87,8 +103,22 @@ const update_user_product=async(_id:object,userId:object,record:object)=>{
 
       return isUpdated
 }
+
+
+
+const add_comment=async(userId,productId,comment)=>{
+    let newComment=new commentModal({
+        userId,
+        ProductId:productId,
+        comment
+    })
+    await newComment.save()
+    return {newComment,status:1}
+}
 export {user_login,
        show_user_product,
        show_all_product,
        delete_user_product,
-       update_user_product}
+       update_user_product,
+       show_single_product,
+       add_comment}

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admin = exports.user = void 0;
+exports.superadmin = exports.admin = exports.user = void 0;
 const userModal_1 = require("../modals/userModal");
 const adminModal_1 = require("../modals/adminModal");
 const tokens_1 = require("../common/tokens");
@@ -80,3 +80,4 @@ const superadmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(400).send({ admin_error: 'token not valid' });
     }
 });
+exports.superadmin = superadmin;

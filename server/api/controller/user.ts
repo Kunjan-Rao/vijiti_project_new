@@ -7,7 +7,7 @@ export const login=async(req:Request,res:Response)=>{
      //passing login data into user service
      const login=await user_service.user_login(req.body)
      
-     if(login.status){
+     if(login.status==1){
          let token=login.token
          res.status(200).send({ok:'Login Successfully',token})
      }else{
@@ -47,19 +47,32 @@ export const show_user_product_controller=async(req:Request,res:Response)=>{
         res.status(400).send({error:'No data found'})
     }
  }
+ export const show_single_product_controller=async(req:Request,res:Response)=>{
+     let _id=req.params.id
+         
+     let response=await user_service.show_single_product(_id)
+     let product=response.product
+     console.log(response)
+     if(response.status==1){
+         res.status(200).send(product)
+     }else{
+         res.status(400).send({error:`no data found`})
+     }
+
+ }
  export const show_all_product_controller=async(req:Request,res:Response)=>{
        //passing login data into user service
        try{
-        let user=global.user
-        let id:object=user._id
-     
-       let response=await user_service.show_all_product(id)
-       if(response.status==1){
-           res.status(200).send(response.product)
-       }else{
-        res.status(400).send({error:`not found :${response.err}`})
-    
-       }
+          let user=global.user
+          let id=user._id
+          console.log(id)
+        
+          let response=await user_service.show_all_product(id)
+          if(response.status==1){
+            res.status(200).send(response.product)
+         }else{
+             res.status(400).send({error:`not found :${response.err}`})
+          }
         }catch(err){
             res.status(400).send({error:'No data found'})
         }
@@ -101,10 +114,28 @@ export const update_user_product_controller=async(req:Request,res:Response)=>{
         }
         
           
-    }catch{
+    }catch(err){
 
     }
  
+}
+export const add_comment_product_controller=async(req:Request,res:Response)=>{
+    try{
+     let comment=req.body.comment
+     let user=global.user
+     let userId=user._id
+     let productId=req.params.id
+     let response=await user_service.add_comment(userId,productId,comment)
+     if(response.status){
+         res.status(200).send({ok:'Comment Added'})
+     }else{
+         res.status(400).send({error:"Comment not added"})
+     }
+
+
+    }catch(err){
+      res.status(400).send({error:err})
+    }
 }
    
  

@@ -9,12 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.update_user_product = exports.delete_user_product = exports.show_all_product = exports.show_user_product = exports.user_login = exports.add_product = void 0;
+exports.add_comment = exports.show_single_product = exports.update_user_product = exports.delete_user_product = exports.show_all_product = exports.show_user_product = exports.user_login = exports.add_product = void 0;
 const password_1 = require("../common/password");
 const tokens_1 = require("../common/tokens");
 const userModal_1 = require("../modals/userModal");
 const productModal_1 = require("../modals/productModal");
 const global_1 = require("../common/global");
+const commentModal_1 = require("../modals/commentModal");
+const mongoose = require("mongoose");
 const user_login = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let user = yield userModal_1.default.findOne({ email });
@@ -56,18 +58,32 @@ const show_user_product = (_id) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.show_user_product = show_user_product;
+const show_single_product = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        //   let product=await productModal.find({_id})
+        let _id = mongoose.Types.ObjectId(id);
+        let product = yield productModal_1.default.aggregate([
+            {
+                $match: { _id: _id }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "ProductId",
+                    as: "comment"
+                }
+            },
+        ]);
+        return { status: 1, product };
+    }
+    catch (err) {
+        return { status: 0, err };
+    }
+});
+exports.show_single_product = show_single_product;
 const show_all_product = (_id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        //  let product=await productModal.aggregate([{
-        //      $match:{userId:_id},
-        //      $lookup:
-        //      {
-        //        from:'Users',
-        //        localField:"userId",
-        //        foreignField:"_id",
-        //        as:"userProduct"
-        //      }
-        //  }])
         let product = yield productModal_1.default.aggregate([
             {
                 $match: { $not: { userId: _id } },
@@ -90,3 +106,13 @@ const update_user_product = (_id, userId, record) => __awaiter(void 0, void 0, v
     return isUpdated;
 });
 exports.update_user_product = update_user_product;
+const add_comment = (userId, productId, comment) => __awaiter(void 0, void 0, void 0, function* () {
+    let newComment = new commentModal_1.default({
+        userId,
+        ProductId: productId,
+        comment
+    });
+    yield newComment.save();
+    return { newComment, status: 1 };
+});
+exports.add_comment = add_comment;

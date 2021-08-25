@@ -1,8 +1,7 @@
 //commmon modules
-import {router,Request,Response} from '../common/common-routing-methods'
+import { superadmin } from '../autorization/authorization'
+import {router} from '../common/common-routing-methods'
+import {add_admin_controller} from '../controller/super.admin'
 //super admin routing
-router.get('/admin',(req:Request,res:Response)=>{
-    res.send('hello from admin side')
-    
-})
+router.post('/admin',add_admin_controller)
 export default router
