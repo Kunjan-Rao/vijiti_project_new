@@ -84,9 +84,10 @@ const show_single_product = (id) => __awaiter(void 0, void 0, void 0, function* 
 exports.show_single_product = show_single_product;
 const show_all_product = (_id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        let userId = mongoose.Types.ObjectId(_id);
         let product = yield productModal_1.default.aggregate([
             {
-                $match: { $not: { userId: _id } },
+                $match: { userId: { $nin: [userId] } },
             }
         ]);
         return { status: 1, product };

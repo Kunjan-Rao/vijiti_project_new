@@ -76,12 +76,12 @@ const show_single_product=async(id)=>{
     }
 }
 
-const show_all_product=async(_id:object)=>{
+const show_all_product=async(_id)=>{
     try{
-  
+  let userId=mongoose.Types.ObjectId(_id)
    let product=await productModal.aggregate([
         {
-            $match:{$not:{userId:_id}},
+          $match: { userId: {$nin:[userId]}},
        
         }
     ]);
