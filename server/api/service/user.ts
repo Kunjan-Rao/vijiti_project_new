@@ -206,7 +206,6 @@ const delete_comment=async(commentId,userId)=>{
 const delete_comment_reply=async(replyId,userId)=>{
     let rid=mongoose.Types.ObjectId(replyId)
     let uid=mongoose.Types.ObjectId(userId)
-    console.log(rid,uid)
     let isDeleted=await replyModal.deleteOne({$and:[{userId:uid,_id:rid}]})
     if(isDeleted.deleteCount!=0){
       return {status:1}   
