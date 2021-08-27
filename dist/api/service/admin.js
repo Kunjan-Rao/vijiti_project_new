@@ -46,8 +46,14 @@ const user_register = ({ name, email, mobileno, password }) => __awaiter(void 0,
 exports.user_register = user_register;
 const show_all_user = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield userModal_1.default.aggregate([{ $project: {} }]);
-        console.log(users);
+        const users = yield userModal_1.default.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $project: { password: 0 }
+            }
+        ]);
         return { status: 1, users };
     }
     catch (err) {

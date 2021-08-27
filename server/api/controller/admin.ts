@@ -13,7 +13,7 @@ export const reqister=async(req:Request,res:Response)=>{
 }
 export const show_all_user_controller=async(req:Request,res:Response)=>{
    const users=await admin_service.show_all_user()
-   res.send()
+   res.status(200).send(users.users)
 }
 
 export const admin_login_controller=async(req:Request,res:Response)=>{

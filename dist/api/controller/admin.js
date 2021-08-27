@@ -25,7 +25,7 @@ const reqister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.reqister = reqister;
 const show_all_user_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield admin_service.show_all_user();
-    res.send();
+    res.status(200).send(users.users);
 });
 exports.show_all_user_controller = show_all_user_controller;
 const admin_login_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

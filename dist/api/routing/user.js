@@ -14,4 +14,6 @@ router.post('/product/comment/:id', authorization_1.user, userController.add_com
 router.get('/products', authorization_1.user, userController.show_all_product_controller);
 router.delete('/delete/:id', authorization_1.user, userController.delete_user_product_controller);
 router.put('/update/:id', authorization_1.user, userController.update_user_product_controller);
+router.post('/product/comment/:productId/:commentId', authorization_1.user, userController.add_comment_reply_controller);
+router.delete('/product/comment/delete/:commentId', authorization_1.user, userController.delete_comment_controller);
 exports.default = router;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_comment_product_controller = exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_single_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
+exports.delete_comment_controller = exports.add_comment_reply_controller = exports.add_comment_product_controller = exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_single_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
 const user_service = require("../service/user"); //user modal
 const global_1 = require("../common/global");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -130,10 +130,10 @@ const add_comment_product_controller = (req, res) => __awaiter(void 0, void 0, v
         let productId = req.params.id;
         let response = yield user_service.add_comment(userId, productId, comment);
         if (response.status) {
-            res.status(200).send({ ok: 'Comment Added' });
+            res.status(200).send({ ok: 'Thank you for Comment' });
         }
         else {
-            res.status(400).send({ error: "Comment not added" });
+            res.status(400).send(response.error);
         }
     }
     catch (err) {
@@ -141,3 +141,37 @@ const add_comment_product_controller = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.add_comment_product_controller = add_comment_product_controller;
+const add_comment_reply_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let commentId = req.params.commentId;
+        let productId = req.params.productId;
+        let reply = req.body;
+        console.log(reply, commentId);
+        let response = yield user_service.add_comment_reply(productId, commentId, reply);
+        if (response.status == 1) {
+            res.status(200).send({ ok: "thank you for reply" });
+        }
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+exports.add_comment_reply_controller = add_comment_reply_controller;
+const delete_comment_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let commentId = req.params.commentId;
+        console.log(commentId);
+        let user = global_1.global.user;
+        let userId = user._id;
+        const response = yield user_service.delete_comment(commentId, userId);
+        if (response.status == 1) {
+            res.status(200).send({ ok: 'Comment Deleted' });
+        }
+        else {
+            res.status(400).send({ error: 'You can not delete this comment' });
+        }
+    }
+    catch (err) {
+    }
+});
+exports.delete_comment_controller = delete_comment_controller;

@@ -127,9 +127,9 @@ export const add_comment_product_controller=async(req:Request,res:Response)=>{
      let productId=req.params.id
      let response=await user_service.add_comment(userId,productId,comment)
      if(response.status){
-         res.status(200).send({ok:'Comment Added'})
+         res.status(200).send({ok:'Thank you for Comment'})
      }else{
-         res.status(400).send({error:"Comment not added"})
+         res.status(400).send(response.error)
      }
 
 
@@ -137,7 +137,38 @@ export const add_comment_product_controller=async(req:Request,res:Response)=>{
       res.status(400).send({error:err})
     }
 }
-   
+export const add_comment_reply_controller=async(req:Request,res:Response)=>{
+    try{
+
+     let commentId=req.params.commentId
+     let productId=req.params.productId
+     let reply=req.body
+     console.log(reply,commentId)
+     let response=await user_service.add_comment_reply(productId,commentId,reply)
+     if(response.status==1){
+         res.status(200).send({ok:"thank you for reply"})
+     }
+    }catch(err){
+        res.status(400).send(err)
+
+    }
+}
+export const delete_comment_controller=async(req:Request,res:Response)=>{
+    try{
+     let commentId=req.params.commentId
+     console.log(commentId)
+     let user=global.user
+     let userId=user._id
+     const response=await user_service.delete_comment(commentId,userId)
+     if(response.status==1){
+         res.status(200).send({ok:'Comment Deleted'})
+     }else{
+         res.status(400).send({error:'You can not delete this comment'})
+     }
+    }catch(err){
+
+    }
+}
  
 
     

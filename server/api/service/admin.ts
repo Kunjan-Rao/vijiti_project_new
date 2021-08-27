@@ -37,8 +37,15 @@ const user_register=async({name,email,mobileno,password})=>{
 
 const show_all_user=async()=>{
     try{  
-    const users=await usermodal.aggregate([{$project:{}}])
-    console.log(users)
+    const users=await usermodal.aggregate([
+        {
+            $match:{}
+        },
+        {
+            $project:{password:0}
+        }
+    ])
+
      return {status:1,users}
 
     }catch(err){
