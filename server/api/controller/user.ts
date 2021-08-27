@@ -156,7 +156,7 @@ export const add_comment_reply_controller=async(req:Request,res:Response)=>{
 export const delete_comment_controller=async(req:Request,res:Response)=>{
     try{
      let commentId=req.params.commentId
-     console.log(commentId)
+   
      let user=global.user
      let userId=user._id
      const response=await user_service.delete_comment(commentId,userId)
@@ -165,6 +165,21 @@ export const delete_comment_controller=async(req:Request,res:Response)=>{
      }else{
          res.status(400).send({error:'You can not delete this comment'})
      }
+    }catch(err){
+
+    }
+}
+export const delete_comment_reply_controller=async(req:Request,res:Response)=>{
+    try{
+    let replyId=req.params.replyId
+    let user=global.user
+     let userId=user._id
+     const response=await user_service.delete_comment_reply(replyId,userId)
+     if(response.status==1){
+        res.status(200).send({ok:'reply Deleted'})
+    }else{
+        res.status(400).send({error:'You can not delete this reply'})
+    } 
     }catch(err){
 
     }

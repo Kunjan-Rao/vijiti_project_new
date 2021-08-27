@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.delete_comment_controller = exports.add_comment_reply_controller = exports.add_comment_product_controller = exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_single_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
+exports.delete_comment_reply_controller = exports.delete_comment_controller = exports.add_comment_reply_controller = exports.add_comment_product_controller = exports.update_user_product_controller = exports.delete_user_product_controller = exports.show_all_product_controller = exports.show_single_product_controller = exports.show_user_product_controller = exports.add_product_controller = exports.login = void 0;
 const user_service = require("../service/user"); //user modal
 const global_1 = require("../common/global");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -160,7 +160,6 @@ exports.add_comment_reply_controller = add_comment_reply_controller;
 const delete_comment_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let commentId = req.params.commentId;
-        console.log(commentId);
         let user = global_1.global.user;
         let userId = user._id;
         const response = yield user_service.delete_comment(commentId, userId);
@@ -175,3 +174,20 @@ const delete_comment_controller = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.delete_comment_controller = delete_comment_controller;
+const delete_comment_reply_controller = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let replyId = req.params.replyId;
+        let user = global_1.global.user;
+        let userId = user._id;
+        const response = yield user_service.delete_comment_reply(replyId, userId);
+        if (response.status == 1) {
+            res.status(200).send({ ok: 'reply Deleted' });
+        }
+        else {
+            res.status(400).send({ error: 'You can not delete this reply' });
+        }
+    }
+    catch (err) {
+    }
+});
+exports.delete_comment_reply_controller = delete_comment_reply_controller;

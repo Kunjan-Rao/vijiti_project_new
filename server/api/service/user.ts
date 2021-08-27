@@ -17,8 +17,11 @@ const user_login=async({email,password})=>{
             if(isValid){
                 let token=await genrateToken(user._id) 
                 return {status:1,token}
+            }else{
+                return {status:0}
             }
        }
+       return{status:0,err:'User no found'}
 
     }catch(err){
         return{status:0,err}
@@ -193,12 +196,22 @@ const add_comment_reply=async(productId,commentId,msg)=>{
 const delete_comment=async(commentId,userId)=>{
     let cid=mongoose.Types.ObjectId(commentId)
     let uid=mongoose.Types.ObjectId(userId)
-    console.log(cid,uid)
-    let isDeleted=await commentModal.deleteOne({$and:[{userId:uid,commentId:cid}]})
+    let isDeleted=await commentModal.deleteOne({$and:[{ userId:uid,_id:cid}]})
     if(isDeleted.deletedCount!=0){
         return {status:1}
     }else{
         return {Status:0}
+    }
+}
+const delete_comment_reply=async(replyId,userId)=>{
+    let rid=mongoose.Types.ObjectId(replyId)
+    let uid=mongoose.Types.ObjectId(userId)
+    console.log(rid,uid)
+    let isDeleted=await replyModal.deleteOne({$and:[{userId:uid,_id:rid}]})
+    if(isDeleted.deleteCount!=0){
+      return {status:1}   
+    }else{
+        return {status:0}
     }
 }
 
@@ -210,4 +223,5 @@ export {user_login,
        show_single_product,
        add_comment,
        add_comment_reply,
-       delete_comment}
+       delete_comment,
+       delete_comment_reply}

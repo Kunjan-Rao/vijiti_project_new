@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.delete_comment = exports.add_comment_reply = exports.add_comment = exports.show_single_product = exports.update_user_product = exports.delete_user_product = exports.show_all_product = exports.show_user_product = exports.user_login = exports.add_product = void 0;
+exports.delete_comment_reply = exports.delete_comment = exports.add_comment_reply = exports.add_comment = exports.show_single_product = exports.update_user_product = exports.delete_user_product = exports.show_all_product = exports.show_user_product = exports.user_login = exports.add_product = void 0;
 const password_1 = require("../common/password");
 const tokens_1 = require("../common/tokens");
 const userModal_1 = require("../modals/userModal");
@@ -28,7 +28,11 @@ const user_login = ({ email, password }) => __awaiter(void 0, void 0, void 0, fu
                 let token = yield tokens_1.genrateToken(user._id);
                 return { status: 1, token };
             }
+            else {
+                return { status: 0 };
+            }
         }
+        return { status: 0, err: 'User no found' };
     }
     catch (err) {
         return { status: 0, err };
@@ -185,8 +189,7 @@ exports.add_comment_reply = add_comment_reply;
 const delete_comment = (commentId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     let cid = mongoose.Types.ObjectId(commentId);
     let uid = mongoose.Types.ObjectId(userId);
-    console.log(cid, uid);
-    let isDeleted = yield commentModal_1.default.deleteOne({ $and: [{ userId: uid, commentId: cid }] });
+    let isDeleted = yield commentModal_1.default.deleteOne({ $and: [{ userId: uid, _id: cid }] });
     if (isDeleted.deletedCount != 0) {
         return { status: 1 };
     }
@@ -195,3 +198,16 @@ const delete_comment = (commentId, userId) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.delete_comment = delete_comment;
+const delete_comment_reply = (replyId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    let rid = mongoose.Types.ObjectId(replyId);
+    let uid = mongoose.Types.ObjectId(userId);
+    console.log(rid, uid);
+    let isDeleted = yield replymodal_1.default.deleteOne({ $and: [{ userId: uid, _id: rid }] });
+    if (isDeleted.deleteCount != 0) {
+        return { status: 1 };
+    }
+    else {
+        return { status: 0 };
+    }
+});
+exports.delete_comment_reply = delete_comment_reply;

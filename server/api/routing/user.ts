@@ -15,5 +15,6 @@ router.delete('/delete/:id',user,userController.delete_user_product_controller)
 router.put('/update/:id',user,userController.update_user_product_controller)
 router.post('/product/comment/:productId/:commentId',user,userController.add_comment_reply_controller)
 router.delete('/product/comment/delete/:commentId',user,userController.delete_comment_controller)
+router.delete('/product/comment/reply/delete/:replyId',user,userController.delete_comment_reply_controller)
 
 export default router
