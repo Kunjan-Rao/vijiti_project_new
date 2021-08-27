@@ -7,19 +7,18 @@ import { global } from "../common/global";
 import commentModal from "../modals/commentModal";
 import * as mongoose from "mongoose";
 import replyModal from "../modals/replymodal";
-
+//user login service
 const user_login=async({email,password})=>{
     try{ 
-        console.log(email)
        let user=await usermodal.findOne({email})
        if(user){
-        const isValid=await verifyPassword(password,user.password)
-            if(isValid){
-                let token=await genrateToken(user._id) 
-                return {status:1,token}
-            }else{
-                return {status:0}
-            }
+         const isValid=await verifyPassword(password,user.password)
+             if(isValid){
+                 let token=await genrateToken(user._id) 
+                 return {status:1,token}
+             }else{
+                 return {status:0}
+             }
        }
        return{status:0,err:'User no found'}
 
@@ -27,7 +26,7 @@ const user_login=async({email,password})=>{
         return{status:0,err}
     }
 }
-
+//add product servcie
 export const add_product=async(product:product)=>{
     try{
       let {item,category,price}=product
@@ -43,18 +42,76 @@ export const add_product=async(product:product)=>{
     }
 
 }
-
+//display user specefic product
 const show_user_product=async(_id:object)=>{
     try{
-
-    let product=await productModal.find({userId:_id})
-  
-     return {status:1,product}
+        // let product=await productModal.find({userId:_id})
+        let product=await productModal.aggregate([ 
+            {
+                $match:{userId:_id}
+            },
+            { $lookup:{ 
+                from:'comments',
+                localField:'_id',
+                foreignField:'ProductId',
+                as:'comment'  
+                
+               }
+            },
+            {$unwind:{path:'$comment',preserveNullAndEmptyArrays:true}},
+       
+            {$lookup:{ 
+                from:'users',
+                localField:'comment.userId',
+                foreignField:'_id',
+                as:'comment.user'  
+                
+               }
+       
+            },
+             {$unwind:{path:'$comment.user',preserveNullAndEmptyArrays:true}},
+             { $lookup:{ 
+                from:'replies',
+                localField:'comment._id',
+                foreignField:'commentId',
+                as:'comment.reply'  
+                
+               }
+            },
+             {$project: {
+                'comment.ProductId':0,
+                'comment.userId':0,
+                'comment.__v':0,
+                'comment.user._id':0,
+                'comment.user.password':0,
+                'comment.user.mobileno':0,
+                'comment.user.email':0,
+                 'comment.user.__v':0,
+                 'comment.reply.productId':0,
+                 'comment.reply.commentId':0,
+            }
+            
+               
+           },
+           {$group: {
+            _id:"$_id",
+            item: { $first: "$item" },
+            category: { $first: "$category" },
+            price: { $first: "$price" },
+            comment:{$push: "$comment"},
+             
+             }
+             
+            },
+            
+        ])
+        return {status:1,product}
     }catch(err){
-      return {status:0,err}
+         return {status:0,err}
     }
 
 }
+//display single product
 const show_single_product=async(id)=>{
     try{
     //   let product=await productModal.find({_id})

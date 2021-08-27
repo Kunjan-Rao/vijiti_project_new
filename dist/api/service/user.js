@@ -18,9 +18,9 @@ const global_1 = require("../common/global");
 const commentModal_1 = require("../modals/commentModal");
 const mongoose = require("mongoose");
 const replymodal_1 = require("../modals/replymodal");
+//user login service
 const user_login = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(email);
         let user = yield userModal_1.default.findOne({ email });
         if (user) {
             const isValid = yield password_1.verifyPassword(password, user.password);
@@ -39,6 +39,7 @@ const user_login = ({ email, password }) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.user_login = user_login;
+//add product servcie
 const add_product = (product) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { item, category, price } = product;
@@ -54,9 +55,59 @@ const add_product = (product) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.add_product = add_product;
+//display user specefic product
 const show_user_product = (_id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let product = yield productModal_1.default.find({ userId: _id });
+        // let product=await productModal.find({userId:_id})
+        let product = yield productModal_1.default.aggregate([
+            {
+                $match: { userId: _id }
+            },
+            { $lookup: {
+                    from: 'comments',
+                    localField: '_id',
+                    foreignField: 'ProductId',
+                    as: 'comment'
+                }
+            },
+            { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
+            { $lookup: {
+                    from: 'users',
+                    localField: 'comment.userId',
+                    foreignField: '_id',
+                    as: 'comment.user'
+                }
+            },
+            { $unwind: { path: '$comment.user', preserveNullAndEmptyArrays: true } },
+            { $lookup: {
+                    from: 'replies',
+                    localField: 'comment._id',
+                    foreignField: 'commentId',
+                    as: 'comment.reply'
+                }
+            },
+            { $project: {
+                    'comment.ProductId': 0,
+                    'comment.userId': 0,
+                    'comment.__v': 0,
+                    'comment.user._id': 0,
+                    'comment.user.password': 0,
+                    'comment.user.mobileno': 0,
+                    'comment.user.email': 0,
+                    'comment.user.__v': 0,
+                    'comment.reply.productId': 0,
+                    'comment.reply.commentId': 0,
+                }
+            },
+            { $group: {
+                    _id: "$_id",
+                    item: { $first: "$item" },
+                    category: { $first: "$category" },
+                    price: { $first: "$price" },
+                    comment: { $push: "$comment" },
+                }
+            },
+        ]);
         return { status: 1, product };
     }
     catch (err) {
@@ -64,6 +115,7 @@ const show_user_product = (_id) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.show_user_product = show_user_product;
+//display single product
 const show_single_product = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //   let product=await productModal.find({_id})
@@ -201,7 +253,6 @@ exports.delete_comment = delete_comment;
 const delete_comment_reply = (replyId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     let rid = mongoose.Types.ObjectId(replyId);
     let uid = mongoose.Types.ObjectId(userId);
-    console.log(rid, uid);
     let isDeleted = yield replymodal_1.default.deleteOne({ $and: [{ userId: uid, _id: rid }] });
     if (isDeleted.deleteCount != 0) {
         return { status: 1 };
